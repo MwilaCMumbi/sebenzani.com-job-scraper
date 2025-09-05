@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <title>Sebenzani.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* All the beautiful, cutting-edge CSS styles are here */
+        :root {
+            --primary-color: #0a66c2; --secondary-color: #004182; --background-gradient: linear-gradient(120deg, #f3f2ef 0%, #ffffff 100%);
+            --card-background: rgba(255, 255, 255, 0.9); --text-color: #2c3e50; --heading-font: 'Poppins', sans-serif;
+            --body-font: 'Poppins', sans-serif; --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--body-font); background: var(--background-gradient); color: var(--text-color); margin: 0; padding: 0; line-height: 1.6; }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        header {
+            background-color: var(--card-background); backdrop-filter: blur(10px); padding: 15px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .logo { font-family: var(--heading-font); font-size: 1.8em; font-weight: 700; color: var(--primary-color); }
+        nav a { margin: 0 15px; text-decoration: none; color: #555; font-weight: 500; cursor: pointer; padding-bottom: 5px; position: relative; }
+        nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0; background-color: var(--primary-color); transition: width 0.3s ease; }
+        nav a:hover::after, nav a.active::after { width: 100%; }
+        .page-content { display: none; }
+        .page-content.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        h1, h2, h3 { font-family: var(--heading-font); color: #1d2d3c; font-weight: 700; }
+        .content-section { background: var(--card-background); padding: 40px; border-radius: 12px; margin-top: 20px; box-shadow: var(--card-shadow); }
+        .job-card { background: var(--card-background); border-radius: 12px; box-shadow: var(--card-shadow); padding: 25px; margin-bottom: 20px; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid rgba(0,0,0,0.05); }
+        .job-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.12); }
+        .job-card h2 { margin: 0 0 8px 0; font-size: 1.4em; }
+        .job-card .company { color: #555; font-weight: 500; margin-bottom: 15px; }
+        .job-card .metadata { display: flex; flex-wrap: wrap; gap: 20px; color: #777; font-size: 0.9em; margin-bottom: 20px; }
+        .view-button { background-image: linear-gradient(to right, #0a66c2 0%, #004182 100%); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 500; border: none; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .view-button:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 65, 130, 0.3); }
+        .auth-section a { text-decoration: none; color: var(--primary-color); font-weight: 700; }
+        .auth-section .user-name { margin-right: 15px; color: #444; font-weight: 500; }
+        .message { text-align: center; padding: 50px; font-size: 1.2em; color: #888; }
+        #login-banner { text-align: center; background: #e0f0ff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #b3d9ff; }
+        #crash-message { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); z-index: 9999; text-align: center; padding-top: 20vh; }
+        #crash-message h1 { font-size: 2.5em; color: var(--primary-color); }
+        #crash-message p { font-size: 1.2em; color: #555; max-width: 500px; margin: 20px auto; }
+    </style>
+</head>
+<body data-gramm="false">
+
+    <div id="crash-message">
+        <h1>Oops! We hit a snag.</h1>
+        <p>It's not you, it's us! Our data sources might be rearranging their digital furniture. We're on it and will be back to normal shortly. Thanks for your patience!</p>
+    </div>
+
+    <header>
+        <div class="logo">Sebenzani.com</div>
+        <nav>
+            <a href="#jobs" class="nav-link active" onclick="showPage(event, 'jobs')">Jobs</a>
+            <a href="#about" class="nav-link" onclick="showPage(event, 'about')">About Us</a>
+            <a href="#contact" class="nav-link" onclick="showPage(event, 'contact')">Contact Us</a>
+        </nav>
+        <div class="auth-section"></div>
+    </header>
+
+    <div class="container" id="main-container">
+        <!-- The Jobs Page -->
+        <div id="jobs" class="page-content active">
+            <div id="login-banner" style="display:none;">
+                <h2>Unlock All Recent Listings!</h2>
+                <p>You're viewing a limited selection of older job posts. Sign in to see all of the newest job opportunities.</p>
+            </div>
+            <div id="job-listings-container">
+                <div class="message"><p>Loading the latest job listings...</p></div>
+            </div>
+        </div>
+
+        <!-- The About Us Page -->
+        <div id="about" class="page-content">
+             <div class="content-section">
+                <h1>About Us</h1>
+                <h2>Who We Are?</h2><p id="about_who_we_are">[Loading...]</p>
+                <h2>What We Do?</h2><p id="about_what_we_do">[Loading...]</p>
+                <h2>Our Mission</h2><p id="about_our_mission">[Loading...]</p>
+                <h2>Our Team</h2>
+                <div class="team-card">
+                    <h3 id="team_name">[Loading...]</h3>
+                    <p id="team_title">[Loading...]</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Contact Us Page -->
+        <div id="contact" class="page-content">
+            <div class="content-section">
+                <h1>Contact Us</h1>
+                <p><strong>Phone:</strong> <span id="contact_phone">[Loading...]</span></p>
+                <p><strong>Email:</strong> <span id="contact_email">[Loading...]</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let USER_DATA = {};
+        document.addEventListener("DOMContentLoaded", function() {
+            google.script.run
+                .withSuccessHandler(initialize)
+                .withFailureHandler(showCrashMessage) 
+                .getInitialData();
+            showPage(null, window.location.hash.substring(1));
+        });
+        
+        function initialize(data) {
+            if (!data || !data.jobs) {
+                showCrashMessage({ message: "Initial data from backend is invalid." });
+                return;
+            }
+            USER_DATA = data.user;
+            renderAuthSection();
+            displayJobs(data.jobs);
+            displayContent(data.content);
+        }
+
+        function showCrashMessage(error) {
+            console.error("A critical error occurred:", error);
+            document.getElementById('main-container').style.display = 'none';
+            document.getElementById('crash-message').style.display = 'block';
+        }
+        
+        // --- THIS IS THE CORRECTED FUNCTION ---
+        // The two faulty lines that erased the content have been removed.
+        function showPage(event, pageId) {
+            if (event) event.preventDefault();
+            if (!pageId) pageId = 'jobs';
+            
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`nav a[href="#${pageId}"]`).classList.add('active');
+            window.location.hash = pageId;
+        }
+
+        function displayContent(content) {
+            if(content) {
+                document.getElementById('about_who_we_are').textContent = content.about_who_we_are || '';
+                document.getElementById('about_what_we_do').textContent = content.about_what_we_do || '';
+                document.getElementById('about_our_mission').textContent = content.about_our_mission || '';
+                document.getElementById('team_name').textContent = content.team_name || '';
+                document.getElementById('team_title').textContent = content.team_title || '';
+                document.getElementById('contact_phone').textContent = content.contact_phone || '';
+                document.getElementById('contact_email').textContent = content.contact_email || '';
+            }
+        }
+        
+        function displayJobs(jobs) {
+            const container = document.getElementById('job-listings-container');
+            container.innerHTML = "";
+            if (!USER_DATA.isLoggedIn) {
+                document.getElementById('login-banner').style.display = 'block';
+            }
+            if (!jobs || jobs.length === 0) {
+                container.innerHTML = "<div class='message'><p>No recent job listings found.</p></div>";
+                return;
+            }
+            jobs.forEach(function(job) {
+                if (!job || !job[0]) return;
+                const [title, company, location, linkFormula, datePosted] = job;
+                let url = '#';
+                let buttonClass = 'view-button disabled';
+                let buttonText = 'Link Not Found';
+                if (linkFormula && typeof linkFormula === 'string') {
+                    const urlMatch = linkFormula.match(/=HYPERLINK\((["'])(.*?)\1/);
+                    if (urlMatch && urlMatch[2]) {
+                        url = urlMatch[2];
+                        buttonClass = 'view-button';
+                        buttonText = 'View on LinkedIn';
+                    }
+                }
+                const card = document.createElement('div');
+                card.className = 'job-card';
+                card.innerHTML = `<h2>${title}</h2><p class="company">${company || 'N/A'}</p><div class="metadata"><span>📍 ${location || 'N/A'}</span><span>📅 ${datePosted || 'N/A'}</span></div><a href="${url}" target="_blank" class="${buttonClass}">${buttonText}</a>`;
+                container.appendChild(card);
+            });
+        }
+        
+        function renderAuthSection() {
+            const authContainer = document.querySelector('.auth-section');
+            if (USER_DATA.isLoggedIn) {
+                const welcomeName = USER_DATA.name === 'New User' ? 'there' : USER_DATA.name.split(' ')[0];
+                authContainer.innerHTML = `<span class="user-name">Welcome, ${welcomeName}</span>`;
+            } else {
+                authContainer.innerHTML = `<a href="${google.script.host.origin}?page=login" target="_top">Sign In / Sign Up</a>`;
+            }
+        }
+    </script>
+
+</body>
+</html>
